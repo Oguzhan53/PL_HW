@@ -1,0 +1,114 @@
+
+
+%{ 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+int sign 	= 0; //comment and program finishing mark
+int sign1	= 0; //identifier sign
+int sign2	= 0; // " sign 
+%} 
+
+
+
+%%
+
+\n      sign1=0; 
+and	{if(sign1!=1){printf("KW_AND \n");}}
+or	{if(sign1!=1){printf("KW_OR \n");}}
+not	{if(sign1!=1){printf("KW_NOT \n");}}
+equal	{if(sign1!=1){printf("KW_EQUAL \n");}}
+less 	{if(sign1!=1){printf("KW_LESS \n");}}
+nil	{if(sign1!=1){printf("KW_NIL \n");}}
+list	{if(sign1!=1){printf("KW_LIST \n");}}
+append	{if(sign1!=1){printf("KW_APPEND \n");}}
+concat	{if(sign1!=1){printf("KW_CONCAT \n");}}
+set	{if(sign1!=1){printf("KW_SET \n");}}
+deffun	{if(sign1!=1){printf("KW_DEFFUN \n");}}	 	
+for	{if(sign1!=1){printf("KW_FOR \n");}}
+if	{if(sign1!=1){printf("KW_IF \n");}}
+exit	{if(sign1!=1){printf("KW_EXIT \n");}}
+load	{if(sign1!=1){printf("KW_LOAD \n");}}
+disp	{if(sign1!=1){printf("KW_DISP \n");}}
+true	{if(sign1!=1){printf("KW_TRUE \n");}}
+false 	{if(sign1!=1){printf("KW_FALSE \n");}}
+"+"	{printf("OP_PLUS \n");}
+"-"	{printf("OP_MUNIS \n");}
+"/"	{printf("OP_DIV \n");}
+"*"	{printf("OP_MULT \n");}
+"("  	{printf("OP_OP \n");sign1=0;}
+")"	{printf("OP_CP \n");sign1=0;}
+,	{printf("OP_COMMA \n");}
+;;	{printf("COMMENT \n");return 1;}
+[1-9]+[0-9]* {printf("VALUE \n");}
+0*	{printf("VALUE \n");}
+0[0-9]*	{printf("ERROR\n");} 
+[ \t] 	{if(sign2==1){sign1=0;}}  	
+.       return 2;
+endprogram     {if(sign1!=1){return 0;}} // if user write endprogram ,program ends.
+%% 
+ 
+
+int yywrap(){} 
+int main(int argc, char **argv) 
+{ 
+int t=1;
+
+
+  
+ char input[50]; 
+ fgets(input,50,stdin);
+ int c;
+ for( c=0;input[c]!='\0';c++){
+ }
+ 
+  if(c >=5){ //if user print g++ myhelloworld.g++ program read myhelloworld.g++ file or user print only g++ program read in console.
+        FILE *fp;
+        fp = fopen("myhelloworld.g++","r"); 
+        yyin = fp; 
+        }
+  
+
+while(t==1){
+	
+		
+
+	
+	sign = yylex(); 
+	if(sign==1){
+		sign1=1;
+		sign=0; 
+	}
+	else if (sign==2){
+		if (yytext[0]=='"'){
+			if(sign2==0){
+			        printf("OP_OC \n");
+			        sign1=1;
+			        sign2=1;
+			        }
+			 else if(sign2=1){
+			        printf("OP_CC \n");
+			        sign1=0;
+			        sign2=0;
+			 }
+		}
+		
+		else {
+			if(sign1 ==0){
+				yytext="aaa";
+				printf("INDENTIFIER\n");
+				sign1=1;
+			}
+		}
+		
+		sign=0;
+	}
+	else if(sign==0){
+		break;
+	}
+}
+
+    	fclose(yyin); 
+return 0; 
+
+}
